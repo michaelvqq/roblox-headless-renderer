@@ -7,8 +7,8 @@
 -- (Instance.new, set properties, parent), so this copies the Roblox side, not any
 -- library: Lune's own instances (properties, datatypes, Enums, saving), plus events,
 -- the services UI code touches, instance-based require, and a frame loop that runs
--- game time (60 Hz frames, a clock, timers) for a few seconds so the UI settles. Story forms: function(target) (Hoarcekat, UI Labs); UI Labs tables
--- with react/reactRoblox, roact, fusion, vide or a generic render; Flipbook's table.
+-- game time (60 Hz frames, a clock, timers) for a few seconds so the UI settles.
+-- Story forms: function(target) (Hoarcekat, UI Labs); UI Labs tables with react/reactRoblox, roact, fusion, vide or a generic render; Flipbook's table.
 -- Scripts' own threads are left behind: the process exits once the UI is saved.
 local roblox = require("@lune/roblox")
 local fs = require("@lune/fs")
