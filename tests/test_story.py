@@ -117,6 +117,13 @@ def main() -> int:
         nodes = {node["path"]: node for node in doc["nodes"]}
         probe = nodes.get("Getfenv/Target/Probe", {}).get("text", {}).get("content")
         check(probe == "plain", f"getfenv() gives the story's globals, no injection key, no Lune: {probe!r}")
+    print("story: string requires (@self/, ./, ../) resolve inside the project only")
+    doc = layout("StringRequire.story.luau", "--rich")
+    if doc:
+        nodes = {node["path"]: node for node in doc["nodes"]}
+        text = lambda name: nodes.get(f"StringRequire/Target/{name}", {}).get("text", {}).get("content")
+        check(text("Probe") == "strings", f"@self/, ./ and ../ from an init module and its children: {text('Probe')!r}")
+        check(text("Escape") == "refused", f"a path out of the project is refused: {text('Escape')!r}")
 
     print("story: no way to Lune's own globals through getfenv")
     proc = run(["layout", str(STORIES / "Escape.story.luau")])
