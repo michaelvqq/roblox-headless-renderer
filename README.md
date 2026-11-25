@@ -1,3 +1,22 @@
+## This fork
+
+This is a fork of [TabooHarmony/roblox-headless-renderer](https://github.com/TabooHarmony/roblox-headless-renderer) whose `main` adds fixes so UI stories written with React-Lua 17 (roblox/react 17.3.x), the UI Labs library and Ripple can be drawn by `rhr ui` and `rhr check`:
+
+- React-Lua 17 stories load (`game:DefineFastFlag` and friends raise Roblox's error string): [#3](https://github.com/TabooHarmony/roblox-headless-renderer/pull/3)
+- Stories that `require` the UI Labs library load (`getfenv()` returns the story's own globals): [#5](https://github.com/TabooHarmony/roblox-headless-renderer/pull/5)
+- Luau string requires (`@self/`, `./`, `../`), as Ripple uses them, resolve inside the project: [#7](https://github.com/TabooHarmony/roblox-headless-renderer/pull/7)
+- Engine property defaults: properties Lune has no value for (`GuiService.TopbarInset`, `UserInputService.PreferredInput`, the input flags, ...) read as sensible values instead of raising: [#11](https://github.com/TabooHarmony/roblox-headless-renderer/pull/11) (replaces [#9](https://github.com/TabooHarmony/roblox-headless-renderer/pull/9))
+
+Install the latest:
+
+```sh
+uv tool install --python 3.13 --force "git+https://github.com/michaelvqq/roblox-headless-renderer"
+```
+
+Pinned, known-good version: add `@v1.0.0rc1-react-lua-fixes.1` to the URL.
+
+These changes go away from this fork once upstream merges them. To follow upstream, merge `upstream/main` into this `main` (do not use GitHub's "discard commits" sync, it would drop the fixes).
+
 <h1 align="center">roblox-headless-renderer</h1>
 
 <p align="center">
