@@ -149,6 +149,13 @@ def main() -> int:
               f"--settle 0.25 stops the slide early: {rect.get('Slide')}")
         check(rect.get("Delayed", {}).get("w") == 100.0, f"a 1 s timer has not run yet: {rect.get('Delayed')}")
 
+    print("story: engine methods UI code calls answer neutral values (server time, platform, policy, purchases)")
+    doc = layout("EngineMethods.story.luau", "--rich")
+    if doc:
+        nodes = {node["path"]: node for node in doc["nodes"]}
+        probe = nodes.get("EngineMethods/Target/Probe", {}).get("text", {}).get("content")
+        check(probe == "methods", f"GetServerTimeNow, GetPlatform, PreloadAsync, policy, ownership, TweenPosition: {probe!r}")
+
     print("story: no way to Lune's own globals through getfenv")
     proc = run(["layout", str(STORIES / "Escape.story.luau")])
     check(proc.returncode == 2 and "getfenv is not available" in proc.stderr,
