@@ -6,6 +6,8 @@ This is a fork of [TabooHarmony/roblox-headless-renderer](https://github.com/Tab
 - Stories that `require` the UI Labs library load (`getfenv()` returns the story's own globals): [#5](https://github.com/TabooHarmony/roblox-headless-renderer/pull/5)
 - Luau string requires (`@self/`, `./`, `../`), as Ripple uses them, resolve inside the project: [#7](https://github.com/TabooHarmony/roblox-headless-renderer/pull/7)
 - Engine property defaults: properties Lune has no value for (`GuiService.TopbarInset`, `UserInputService.PreferredInput`, the input flags, ...) read as sensible values instead of raising: [#11](https://github.com/TabooHarmony/roblox-headless-renderer/pull/11) (replaces [#9](https://github.com/TabooHarmony/roblox-headless-renderer/pull/9))
+- Game time: stories run 2 s (`--settle SECONDS`) of 60 Hz frames with Heartbeat, RenderStepped and Stepped, and `task.wait`, `task.delay`, `os.clock` and `tick` on that clock, so springs and timers settle before the picture: [#13](https://github.com/TabooHarmony/roblox-headless-renderer/pull/13)
+- Engine methods UI code calls (`Workspace:GetServerTimeNow`, `MarketplaceService`, `PolicyService`, `ContentProvider:PreloadAsync`, `UserInputService:GetPlatform`, legacy `TweenPosition`, `debug.profilebegin`, ...) answer neutral values instead of raising: [#15](https://github.com/TabooHarmony/roblox-headless-renderer/pull/15) (builds on #11)
 
 Install the latest:
 
@@ -13,7 +15,7 @@ Install the latest:
 uv tool install --python 3.13 --force "git+https://github.com/michaelvqq/roblox-headless-renderer"
 ```
 
-Pinned, known-good version: add `@v1.0.0rc1-react-lua-fixes.1` to the URL.
+Pinned, known-good version: add `@v1.0.0rc1-react-lua-fixes.2` to the URL.
 
 These changes go away from this fork once upstream merges them. To follow upstream, merge `upstream/main` into this `main` (do not use GitHub's "discard commits" sync, it would drop the fixes).
 
