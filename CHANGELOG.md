@@ -7,6 +7,9 @@
   `game:DefineFastFlag` and matches the error text, and the story runner's `DataModel` raised a
   non-string error. `DefineFast*`, `GetFast*` and `SetFastFlagForTesting` now raise Roblox's
   "The current thread cannot call" string, so SafeFlags takes its normal fallback (#2).
+- **Stories that require the UI Labs library load.** Its `Environment` module calls `getfenv()`, which the story
+  runner refused, so the library failed to load. `getfenv()` and `getfenv(1)` now return a copy of the story's own
+  globals (no Lune globals, no UI Labs injection key); `getfenv(0)` and any other level are still refused (#4).
 
 ## 1.0.0rc1 (release candidate)
 
