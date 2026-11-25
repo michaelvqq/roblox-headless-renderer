@@ -17,6 +17,10 @@ SETTLE_S seconds (`--settle`) before the UI is saved: Heartbeat, RenderStepped a
 fire at 60 Hz, os.clock/tick/time and task.wait/task.delay follow that clock, so springs
 and timers a story starts have moved when it is drawn.
 
+With --device the story sees
+that device's input: touch (TouchEnabled, PreferredInput Touch, no keyboard or mouse) on a phone,
+android or tablet, a gamepad on the console, keyboard and mouse otherwise.
+
 A story is run again only when something it runs on changed (the project's files,
 the viewport, RHR's runtime): `check` then `ui` of the same story runs it once. A
 story that builds something different each run (random, the clock) keeps its first.
@@ -145,6 +149,11 @@ def build(story: Path, *, width: int = 1920, height: int = 1080, settle: float |
     from rhr.profile import phase
 
     settle = SETTLE_S if settle is None else max(0.0, settle)
+    from rhr import devices
+
+    # The input the player has: a phone or tablet is a touch screen, the console a gamepad.
+    device = devices.CURRENT
+    input_kind = "touch" if device is not None and device.touch else "gamepad" if device is not None and device.name == "console" else "keyboard"
     project = find_project(story)
     name = story_name(story)
     key = hashlib.sha1(str(story.resolve()).encode("utf-8")).hexdigest()[:12]
@@ -156,7 +165,7 @@ def build(story: Path, *, width: int = 1920, height: int = 1080, settle: float |
     with phase("story: inputs check"):
         runtime = (PACKAGE / "luau" / "story-runtime.luau").stat()
         inputs = json.dumps([str(story.resolve()), rojo.inputs_digest(project), width, height,
-                             runtime.st_size, runtime.st_mtime_ns, str(lune_executable()), settle])
+                             runtime.st_size, runtime.st_mtime_ns, str(lune_executable()), settle, input_kind])
     try:
         kept = json.loads(stamp.read_text(encoding="utf-8"))
         if out.is_file() and kept.get("inputs") == inputs:
@@ -176,7 +185,7 @@ def build(story: Path, *, width: int = 1920, height: int = 1080, settle: float |
     with phase("story: run (Lune)"):
         proc = subprocess.run(
             [lune_executable(), "run", str(PACKAGE / "luau" / "story-runtime.luau"), str(built), json.dumps(names),
-             str(out), str(width), str(height), name, str(REFERENCE_TOPBAR_HEIGHT), str(settle)],
+             str(out), str(width), str(height), name, str(REFERENCE_TOPBAR_HEIGHT), str(settle), input_kind],
             capture_output=True, text=True, encoding="utf-8", errors="replace", stdin=subprocess.DEVNULL,
             timeout=TIMEOUT_S, **no_window())
     problems = _tidy(_point_at_files(proc.stderr.strip(), files, project.parent))
