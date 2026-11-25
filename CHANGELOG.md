@@ -12,6 +12,11 @@
   globals (no Lune globals, no UI Labs injection key); `getfenv(0)` and any other level are still refused (#4).
 - **Stories can use Luau string requires.** `require("@self/x")`, `require("./x")` and `require("../x")` (as
   littensy/ripple 0.10.2 writes them) resolve inside the story's own project tree; other strings are refused (#6).
+- **Engine properties Lune has no value for read as defaults in a story.** Lune's data lists many service properties it
+  cannot read ("missing default value" / "malformed property info": `UserInputService.KeyboardEnabled` and
+  `PreferredInput`, `GuiService.TopbarInset`, ...), which broke UI code that reads them. A story now sees `game` and the
+  services it touches through a forwarding proxy that answers from a table of desktop defaults (`TopbarInset` is a Rect
+  of rhr's reference top-bar height), else a typed neutral value with one warning (#10).
 
 ## 1.0.0rc1 (release candidate)
 
